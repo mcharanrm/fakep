@@ -1,0 +1,60 @@
+---
+name: "Diff CI Workflow"
+
+# Use github contexts to make it more interactive
+# https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
+run-name: "Running Diff CI w.r.t ${{ github.actor }} - ${{ github.event_name }} - ${{ github.event.number }}"
+
+# Run this workflow either on a single event or multiple events
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request
+on:
+  pull_request:
+    types:
+    - "opened"
+    - "edited"
+    - "labeled"
+    - "assigned"
+    - "reopened"
+    branches:
+    - "main"
+    - "master"
+
+jobs:
+  check-changed-and-modifed-files:
+    runs-on: "ubuntu-latest"
+
+    steps:
+    - name: "Checkout ${{ github.repository }} repository"
+      uses: "actions/checkout@v3"
+      with:
+        fetch-depth: 0
+
+    - name: "Look for added, changed and modified files in ${{github.repository }}, PR - ${{ github.event.number }}"
+      uses: "tj-actions/changed-files@v34"
+      id: "changed-files"
+
+    - name: "List all changed and modified files, if there are any"
+      run: |
+        for file in ${{ steps.changed-files.outputs.all_changed_and_modified_files }}; do
+          echo "$file"
+        done
+      if: ${{ steps.changed-files.outputs.all_changed_and_modified_files }}
+
+    - name: "Comment PR if there are any modified files"
+      uses: "thollander/actions-comment-pull-request@v2"
+      with:
+        message: |
+          Hello ${{ github.actor }} :wave:
+
+          Fyi, We see following files have been modified in ${{github.repository }}, PR - ${{ github.event.number }} 
+          
+          ```
+          ${{ steps.changed-files.outputs.modified_files }} 
+          ```
+      if: ${{ steps.changed-files.outputs.all_changed_and_modified_files }}
+
+
+
+
+
