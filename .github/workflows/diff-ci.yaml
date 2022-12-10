@@ -34,22 +34,15 @@ jobs:
       uses: "tj-actions/changed-files@v34"
       id: "changed-files"
 
-    - name: "List all changed and modified files, if there are any"
-      run: |
-        for file in ${{ steps.changed-files.outputs.all_changed_and_modified_files }}; do
-          echo "$file"
-        done
-      if: ${{ steps.changed-files.outputs.all_changed_and_modified_files }}
-
     - name: "Comment PR if there are any modified files"
       uses: "thollander/actions-comment-pull-request@v2"
       with:
         message: |
           Hello ${{ github.actor }} :wave:
 
-          Fyi, We see following files have been modified in ${{github.repository }}, PR - ${{ github.event.number }} 
+          Fyi, We see following files have been added or modified in ${{github.repository }}, PR - ${{ github.event.number }} 
           
           ```
-          ${{ steps.changed-files.outputs.modified_files }} 
+          ${{ steps.changed-files.outputs.all_changed_and_modified_files }} 
           ```
       if: ${{ steps.changed-files.outputs.all_changed_and_modified_files }}
