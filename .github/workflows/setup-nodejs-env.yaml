@@ -1,0 +1,39 @@
+---
+# For now i just have very basic idea and wanted 
+# to verify that with some more reading. 
+# 
+# Task here is to setup NodeJS environment and I 
+# can already see an action available on the github marketplace. 
+# https://github.com/marketplace/actions/setup-node-js-environment
+# 
+# It also does offer package management tools, like npm and yarn.
+
+# npm is a package manager for node.js. You can use it to install 
+# and publish your node programs. It manages dependencies and does 
+# other cool stuff - stolen from `rpm -qi npm`
+
+name: "Setup NodeJS environment"
+on:
+    pull_request:
+      branches:
+      - "main"
+      - "master"
+
+  
+jobs:
+    node-js-env-setup:
+      runs-on: "ubuntu-latest"
+
+      steps:
+      - name: "Checkout ${{ github.repository }} repository"
+        uses: "actions/checkout@v3"
+
+      - name: "Setup Node.js environment"
+        uses: "actions/setup-node@v3"
+
+      - name: "Capture the installed Node version"
+        run: "node -v"
+        id: "node_version"
+
+      - name: "Say, I am grumpy pig"
+        run: "node scripts/grumpy_pig.js"
