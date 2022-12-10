@@ -35,8 +35,5 @@ jobs:
         run: "node -v"
         id: "node_version"
 
-      - name: "Print the installed Node version"
-        run: "echo Installed Node version: {{ steps.node_version.outputs }}"
-
       - name: "Say, I am grumpy pig"
         run: "node scripts/grumpy_pig.js"
