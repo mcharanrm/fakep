@@ -54,7 +54,7 @@ class query_range_api(Resource):
         #org_id_suffix = re.sub(r'.*org([0-9]+).*', r'\1', args['query'])
         
         # Generate timeseries data
-        SYSTEM_PER_ORGANIZATION = getenv('SYS_PER_ORG', 10)
+        SYSTEM_PER_ORGANIZATION = getenv('SYS_PER_ORG', '10')
         return {
             'status': 'success',
             'data': {
